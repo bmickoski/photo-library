@@ -51,7 +51,7 @@ export class PhotoApiService {
       delay(randomDelay()),
       map((item) => ({
         id: item.id,
-        url: `${BASE_URL}/id/${item.id}/400/400`,
+        url: `${BASE_URL}/id/${item.id}/200/300`,
         width: item.width,
         height: item.height,
         author: item.author,

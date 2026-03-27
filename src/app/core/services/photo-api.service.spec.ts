@@ -107,7 +107,7 @@ describe('PhotoApiService', () => {
       await vi.runAllTimersAsync();
 
       expect(result?.id).toBe('10');
-      expect(result?.url).toBe('https://picsum.photos/id/10/400/400');
+      expect(result?.url).toBe('https://picsum.photos/id/10/200/300');
       expect(result?.author).toBe('Test Author');
     });
   });
