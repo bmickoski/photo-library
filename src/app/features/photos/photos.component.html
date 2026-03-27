@@ -1,0 +1,29 @@
+<app-photo-grid>
+  @for (photo of stream.photos(); track photo.id) {
+    @defer (on viewport) {
+      <app-photo-card
+        [photo]="photo"
+        [isFavorite]="favStore.isFavorite(photo.id)"
+        (cardClicked)="addToFavorites($event)"
+      />
+    } @placeholder {
+      <div class="photo-skeleton"></div>
+    }
+  }
+</app-photo-grid>
+
+@if (stream.loading()) {
+  <app-loader />
+}
+
+@if (stream.isEmpty()) {
+  <p class="empty-msg">No photos found.</p>
+}
+
+@if (stream.hasMore() && !stream.loading()) {
+  <div
+    class="scroll-sentinel"
+    appInfiniteScroll
+    (scrolled)="stream.loadMore()"
+  ></div>
+}

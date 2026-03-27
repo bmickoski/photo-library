@@ -1,0 +1,17 @@
+@if (loading()) {
+  <app-loader />
+} @else if (photo()) {
+  <div class="detail-wrap">
+    <img class="full-photo" [src]="photo()!.url" [alt]="photo()!.author" />
+    <div class="actions">
+      <p class="author">{{ photo()!.author }}</p>
+      @if (isFavorite()) {
+        <button mat-raised-button color="warn" (click)="removeFromFavorites()">
+          Remove from favorites
+        </button>
+      }
+    </div>
+  </div>
+} @else {
+  <p class="not-found">Photo not found.</p>
+}
