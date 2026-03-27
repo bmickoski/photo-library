@@ -1,0 +1,6 @@
+<div class="card" (click)="cardClicked.emit(photo())" [class.is-favorite]="isFavorite()">
+  <img [src]="photo().url" [alt]="photo().author" loading="lazy" />
+  @if (isFavorite()) {
+    <span class="favorite-badge" aria-label="In favorites">&#9829;</span>
+  }
+</div>
