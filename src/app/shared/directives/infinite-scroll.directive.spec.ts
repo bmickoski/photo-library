@@ -9,7 +9,7 @@ let capturedCallback: ObserverCallback | null = null;
 const observeSpy = vi.fn();
 const disconnectSpy = vi.fn();
 
-// Must be a real class — arrow functions can't be called with `new`
+// Must be a real class - arrow functions can't be called with `new`
 class MockIntersectionObserver {
   constructor(cb: ObserverCallback) {
     capturedCallback = cb;

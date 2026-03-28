@@ -65,7 +65,7 @@ describe('PhotoStreamStore', () => {
       // simulate in-flight request by calling loadMore with a never-resolving observable
       apiSpy.getPhotos.mockReturnValue(of(PAGE));
       store.loadMore();
-      store.loadMore(); // second call while technically already done — but page check works
+      store.loadMore(); // second call while technically already done - but page check works
       expect(apiSpy.getPhotos).toHaveBeenCalledTimes(2);
     });
 
@@ -77,7 +77,7 @@ describe('PhotoStreamStore', () => {
       expect(apiSpy.getPhotos).not.toHaveBeenCalled();
     });
 
-    it('recovers from API error — loading resets to false', () => {
+    it('recovers from API error - loading resets to false', () => {
       apiSpy.getPhotos.mockReturnValue(throwError(() => new Error('network')));
       store.loadMore();
       expect(store.loading()).toBe(false);

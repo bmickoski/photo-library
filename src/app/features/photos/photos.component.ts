@@ -26,13 +26,14 @@ export class PhotosComponent implements OnInit {
   protected readonly stream = inject(PhotoStreamStore);
   protected readonly favStore = inject(FavoritesStore);
   readonly showScrollTop = signal(false);
+  readonly skeletons = Array.from({ length: 12 });
   readonly #snackBar = inject(MatSnackBar);
 
   readonly #destroyRef = inject(DestroyRef);
   readonly #title = inject(Title);
 
   ngOnInit(): void {
-    this.#title.setTitle('Photos — Photo Library');
+    this.#title.setTitle('Photos - Photo Library');
     if (this.stream.photos().length === 0) {
       this.stream.loadMore();
     }

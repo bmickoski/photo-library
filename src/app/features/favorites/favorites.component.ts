@@ -20,7 +20,7 @@ export class FavoritesComponent implements OnInit {
   readonly #title = inject(Title);
 
   ngOnInit(): void {
-    this.#title.setTitle('Favorites — Photo Library');
+    this.#title.setTitle('Favorites - Photo Library');
   }
 
   openPhoto(photo: Photo): void {

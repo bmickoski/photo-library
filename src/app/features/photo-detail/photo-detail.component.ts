@@ -35,7 +35,7 @@ export class PhotoDetailComponent implements OnInit {
   protected readonly isFavorite = computed(() => this.#favStore.isFavorite(this.id()));
 
   ngOnInit(): void {
-    this.#title.setTitle(`Photo ${this.id()} — Photo Library`);
+    this.#title.setTitle(`Photo ${this.id()} - Photo Library`);
 
     const cached = this.#favStore.favorites().find((p) => p.id === this.id());
     if (cached) {
