@@ -6,15 +6,12 @@
 } @else {
   <app-photo-grid>
     @for (photo of favStore.favorites(); track photo.id) {
-      @defer (on viewport) {
-        <app-photo-card
-          [photo]="photo"
-          [isFavorite]="true"
-          (cardClicked)="openPhoto($event)"
-        />
-      } @placeholder {
-        <div class="photo-skeleton"></div>
-      }
+      <app-photo-card
+        [photo]="photo"
+        [isFavorite]="true"
+        viewMode="view"
+        (cardClicked)="openPhoto($event)"
+      />
     }
   </app-photo-grid>
 }

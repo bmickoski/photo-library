@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { PhotosComponent } from './photos.component';
 import { PhotoStreamStore } from '../../store/photo-stream.store';
 import { FavoritesStore } from '../../store/favorites.store';
@@ -22,6 +23,7 @@ function makeStreamStore(photos: Photo[] = [], loading = false) {
     loading: signal(loading),
     hasMore: signal(true),
     isEmpty: signal(photos.length === 0 && !loading),
+    error: signal(false),
     loadMore: vi.fn(),
   };
 }
@@ -51,6 +53,7 @@ describe('PhotosComponent', () => {
         provideRouter([]),
         { provide: PhotoStreamStore, useValue: streamStore },
         { provide: FavoritesStore, useValue: favStore },
+        { provide: MatSnackBar, useValue: { open: vi.fn() } },
       ],
     }).compileComponents();
   });
@@ -76,5 +79,31 @@ describe('PhotosComponent', () => {
     const fixture = TestBed.createComponent(PhotosComponent);
     fixture.componentInstance.addToFavorites(PHOTO);
     expect(favStore.add).toHaveBeenCalledWith(PHOTO);
+  });
+
+  it('shows a snackbar after adding to favorites', () => {
+    const snackBar = TestBed.inject(MatSnackBar);
+    const fixture = TestBed.createComponent(PhotosComponent);
+    fixture.componentInstance.addToFavorites(PHOTO);
+    expect(snackBar.open).toHaveBeenCalledWith('Added to favorites', undefined, { duration: 2000 });
+  });
+
+  it('showScrollTop is false initially', () => {
+    const fixture = TestBed.createComponent(PhotosComponent);
+    expect(fixture.componentInstance.showScrollTop()).toBe(false);
+  });
+
+  it('showScrollTop becomes true when scrolled past 300px', () => {
+    Object.defineProperty(window, 'scrollY', { value: 400, writable: true, configurable: true });
+    const fixture = TestBed.createComponent(PhotosComponent);
+    fixture.componentInstance.onScroll();
+    expect(fixture.componentInstance.showScrollTop()).toBe(true);
+  });
+
+  it('scrollToTop calls window.scrollTo with smooth behavior', () => {
+    const spy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    const fixture = TestBed.createComponent(PhotosComponent);
+    fixture.componentInstance.scrollToTop();
+    expect(spy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 });

@@ -4,7 +4,16 @@
     <a mat-button routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{ exact: true }">
       Photos
     </a>
-    <a mat-button routerLink="/favorites" routerLinkActive="nav-active">
+    @let count = favStore.count();
+    <a
+      mat-button
+      routerLink="/favorites"
+      routerLinkActive="nav-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [matBadge]="count"
+      [matBadgeHidden]="count === 0"
+      matBadgeColor="warn"
+    >
       Favorites
     </a>
   </nav>

@@ -2,27 +2,23 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { signal, computed } from '@angular/core';
+import { Location } from '@angular/common';
+import { signal } from '@angular/core';
 import { PhotoDetailComponent } from './photo-detail.component';
 import { FavoritesStore } from '../../store/favorites.store';
 import { PhotoApiService } from '../../core/services/photo-api.service';
 import { Photo } from '../../core/models/photo.model';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ComponentFixture } from '@angular/core/testing';
 
-const PHOTO: Photo = {
-  id: '42',
-  url: 'https://picsum.photos/id/42/200/300',
-  width: 200,
-  height: 300,
-  author: 'Test',
-};
+const PHOTO: Photo = { id: '42', url: 'https://picsum.photos/id/42/200/300', width: 200, height: 300, author: 'Test' };
 
 function makeFavStore(photos: Photo[] = []) {
   const list = signal(photos);
   return {
     favorites: list,
     isFavorite: (id: string) => list().some((p) => p.id === id),
+    add: vi.fn(),
     remove: vi.fn(),
   };
 }
@@ -75,9 +71,7 @@ describe('PhotoDetailComponent', () => {
     const fixture = createFixture();
     fixture.detectChanges();
     const buttons: NodeListOf<HTMLButtonElement> = fixture.nativeElement.querySelectorAll('button');
-    const removeBtn = Array.from(buttons).find((b) =>
-      b.textContent?.includes('Remove from favorites'),
-    );
+    const removeBtn = Array.from(buttons).find((b) => b.textContent?.includes('Remove from favorites'));
     expect(removeBtn).toBeTruthy();
   });
 
@@ -99,5 +93,40 @@ describe('PhotoDetailComponent', () => {
     const fixture = createFixture();
     fixture.detectChanges();
     expect(apiSpy.getPhotoById).toHaveBeenCalledWith('42');
+  });
+
+  it('shows Add to favorites button when photo is not a favorite', () => {
+    favStore = makeFavStore([]);
+    TestBed.overrideProvider(FavoritesStore, { useValue: favStore });
+    const fixture = createFixture();
+    fixture.detectChanges();
+    const buttons: NodeListOf<HTMLButtonElement> = fixture.nativeElement.querySelectorAll('button');
+    const addBtn = Array.from(buttons).find((b) => b.textContent?.includes('Add to favorites'));
+    expect(addBtn).toBeTruthy();
+  });
+
+  it('addToFavorites calls favStore.add with the current photo', () => {
+    const fixture = createFixture();
+    fixture.detectChanges();
+    fixture.componentInstance.addToFavorites();
+    expect(favStore.add).toHaveBeenCalledWith(PHOTO);
+  });
+
+  it('goBack calls location.back()', () => {
+    const fixture = createFixture();
+    const location = TestBed.inject(Location);
+    const backSpy = vi.spyOn(location, 'back').mockImplementation(() => {});
+    fixture.componentInstance.goBack();
+    expect(backSpy).toHaveBeenCalled();
+  });
+
+  it('sets error signal when API call fails', () => {
+    favStore = makeFavStore([]);
+    apiSpy.getPhotoById.mockReturnValue(throwError(() => new Error('network')));
+    TestBed.overrideProvider(FavoritesStore, { useValue: favStore });
+    TestBed.overrideProvider(PhotoApiService, { useValue: apiSpy });
+    const fixture = createFixture();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.error()).toBe(true);
   });
 });

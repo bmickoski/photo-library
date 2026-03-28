@@ -1,19 +1,22 @@
 <app-photo-grid>
   @for (photo of stream.photos(); track photo.id) {
-    @defer (on viewport) {
-      <app-photo-card
-        [photo]="photo"
-        [isFavorite]="favStore.isFavorite(photo.id)"
-        (cardClicked)="addToFavorites($event)"
-      />
-    } @placeholder {
-      <div class="photo-skeleton"></div>
-    }
+    <app-photo-card
+      [photo]="photo"
+      [isFavorite]="favStore.isFavorite(photo.id)"
+      (cardClicked)="addToFavorites($event)"
+    />
   }
 </app-photo-grid>
 
 @if (stream.loading()) {
   <app-loader />
+}
+
+@if (stream.error()) {
+  <div class="error-msg">
+    <p>Failed to load photos.</p>
+    <button mat-stroked-button (click)="stream.loadMore()">Try again</button>
+  </div>
 }
 
 @if (stream.isEmpty()) {
@@ -26,4 +29,15 @@
     appInfiniteScroll
     (scrolled)="stream.loadMore()"
   ></div>
+}
+
+@if (showScrollTop()) {
+  <button
+    mat-mini-fab
+    class="scroll-top-btn"
+    aria-label="Back to top"
+    (click)="scrollToTop()"
+  >
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
 }

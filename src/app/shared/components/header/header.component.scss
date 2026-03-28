@@ -4,6 +4,8 @@ mat-toolbar {
   position: sticky;
   top: 0;
   z-index: 100;
+  background-color: var(--mat-sys-primary) !important;
+  color: var(--mat-sys-on-primary) !important;
 }
 
 .logo {
@@ -14,9 +16,13 @@ mat-toolbar {
 nav {
   display: flex;
   gap: 0.5rem;
+
+  a[mat-button] {
+    color: var(--mat-sys-on-primary);
+  }
 }
 
 .nav-active {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  border-bottom: 2px solid var(--mat-sys-on-primary);
+  border-radius: 0;
 }

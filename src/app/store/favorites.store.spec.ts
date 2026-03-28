@@ -113,16 +113,6 @@ describe('FavoritesStore', () => {
     });
   });
 
-  describe('clear', () => {
-    it('empties the favorites list', () => {
-      store.add(makePhoto('1'));
-      store.add(makePhoto('2'));
-      store.clear();
-      expect(store.favorites()).toEqual([]);
-      expect(store.count()).toBe(0);
-    });
-  });
-
   describe('ids computed', () => {
     it('returns a Set of favorite ids', () => {
       store.add(makePhoto('a'));
@@ -135,10 +125,10 @@ describe('FavoritesStore', () => {
 
   describe('persistence', () => {
     it('calls storage.set when a photo is added', () => {
-      TestBed.flushEffects();
+      TestBed.tick();
       const callsBefore = storageSpy.set.mock.calls.length;
       store.add(makePhoto('7'));
-      TestBed.flushEffects();
+      TestBed.tick();
       expect(storageSpy.set.mock.calls.length).toBeGreaterThan(callsBefore);
     });
   });

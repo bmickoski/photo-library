@@ -45,7 +45,7 @@ describe('PhotoCardComponent', () => {
     const { fixture } = setup();
     const img = fixture.nativeElement.querySelector('img') as HTMLImageElement;
     expect(img.src).toContain('picsum.photos/id/42/200/300');
-    expect(img.alt).toBe('Test Author');
+    expect(img.alt).toBe('Photo by Test Author');
   });
 
   it('emits cardClicked with the photo when card is clicked', () => {

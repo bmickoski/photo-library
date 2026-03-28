@@ -1,6 +1,9 @@
-<div class="card" (click)="cardClicked.emit(photo())" [class.is-favorite]="isFavorite()">
-  <img [src]="photo().url" [alt]="photo().author" loading="lazy" />
+<button type="button" class="card" (click)="cardClicked.emit(photo())" [class.is-favorite]="isFavorite()">
+  <img [src]="photo().url" [alt]="'Photo by ' + photo().author" loading="lazy" />
   @if (isFavorite()) {
-    <span class="favorite-badge" aria-label="In favorites">&#9829;</span>
+    <mat-icon class="favorite-badge" aria-label="In favorites">favorite</mat-icon>
   }
-</div>
+  <div class="hover-overlay" [class.view-mode]="viewMode() === 'view'">
+    <mat-icon class="overlay-icon">{{ viewMode() === 'view' ? 'open_in_new' : 'favorite' }}</mat-icon>
+  </div>
+</button>

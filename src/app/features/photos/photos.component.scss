@@ -1,22 +1,31 @@
-.photo-skeleton {
-  aspect-ratio: 2 / 3;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
 .scroll-sentinel {
-  height: 1px;
+  min-height: 1px;
+}
+
+.scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 50;
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .empty-msg {
   text-align: center;
   color: #888;
   margin-top: 3rem;
+}
+
+.error-msg {
+  text-align: center;
+  color: #888;
+  margin-top: 3rem;
+
+  p {
+    margin-bottom: 0.75rem;
+  }
 }

@@ -11,12 +11,9 @@ export class FavoritesStore {
 
   readonly favorites = this.#favorites.asReadonly();
   readonly count = computed(() => this.#favorites().length);
-  // Using set we can avoid Array.includes() on every render cycle
   readonly ids = computed(() => new Set(this.#favorites().map((p) => p.id)));
 
   constructor() {
-    // effect() re-runs whenever #favorites changes,
-    // keeping localStorage in sync
     effect(() => {
       this.#storage.set(STORAGE_KEY, this.#favorites());
     });
@@ -36,7 +33,5 @@ export class FavoritesStore {
     this.#favorites.update((list) => list.filter((p) => p.id !== id));
   }
 
-  clear(): void {
-    this.#favorites.set([]);
-  }
+
 }

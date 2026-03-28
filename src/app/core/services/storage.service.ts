@@ -14,10 +14,16 @@ export class StorageService {
   set<T>(key: string, value: T): void {
     try {
       localStorage.setItem(key, JSON.stringify(value));
-    } catch {}
+    } catch {
+      // Ignore storage quota errors
+    }
   }
 
   remove(key: string): void {
-    localStorage.removeItem(key);
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      // private browsing or storage unavailable
+    }
   }
 }

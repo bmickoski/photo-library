@@ -2,16 +2,25 @@
   <app-loader />
 } @else if (photo()) {
   <div class="detail-wrap">
-    <img class="full-photo" [src]="photo()!.url" [alt]="photo()!.author" />
+    <div class="top-bar">
+      <button mat-button (click)="goBack()"><mat-icon>arrow_back</mat-icon> Back</button>
+    </div>
+    <img class="full-photo" [src]="photo()!.url" [alt]="'Photo by ' + photo()!.author" fetchpriority="high" />
     <div class="actions">
-      <p class="author">{{ photo()!.author }}</p>
+      <p class="author">Photo by {{ photo()!.author }}</p>
       @if (isFavorite()) {
         <button mat-raised-button color="warn" (click)="removeFromFavorites()">
           Remove from favorites
         </button>
+      } @else {
+        <button mat-raised-button color="primary" (click)="addToFavorites()">
+          Add to favorites
+        </button>
       }
     </div>
   </div>
+} @else if (error()) {
+  <p class="not-found">Failed to load photo.</p>
 } @else {
   <p class="not-found">Photo not found.</p>
 }

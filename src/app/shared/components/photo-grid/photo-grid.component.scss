@@ -4,6 +4,10 @@
   gap: 1rem;
   padding: 1rem;
 
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
   @media (max-width: 480px) {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 0.5rem;

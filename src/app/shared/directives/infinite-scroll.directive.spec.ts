@@ -1,7 +1,7 @@
-import { InfiniteScrollDirective } from './infinite-scroll.directive';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { InfiniteScrollDirective } from './infinite-scroll.directive';
 
 type ObserverCallback = (entries: IntersectionObserverEntry[]) => void;
 

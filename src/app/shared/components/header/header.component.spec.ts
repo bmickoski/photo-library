@@ -25,7 +25,7 @@ describe('HeaderComponent', () => {
   it('renders a Photos nav link pointing to /', () => {
     const { fixture } = setup();
     const links = fixture.debugElement.queryAll(By.css('a[mat-button]'));
-    const photosLink = links.find((l) => l.nativeElement.textContent.trim() === 'Photos');
+    const photosLink = links.find((l) => l.nativeElement.textContent.includes('Photos'));
     expect(photosLink).toBeTruthy();
     expect(photosLink!.attributes['routerLink']).toBe('/');
   });
@@ -33,7 +33,7 @@ describe('HeaderComponent', () => {
   it('renders a Favorites nav link pointing to /favorites', () => {
     const { fixture } = setup();
     const links = fixture.debugElement.queryAll(By.css('a[mat-button]'));
-    const favLink = links.find((l) => l.nativeElement.textContent.trim() === 'Favorites');
+    const favLink = links.find((l) => l.nativeElement.textContent.includes('Favorites'));
     expect(favLink).toBeTruthy();
     expect(favLink!.attributes['routerLink']).toBe('/favorites');
   });
