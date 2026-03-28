@@ -16,13 +16,13 @@
 
 .empty-msg {
   text-align: center;
-  color: #888;
+  color: var(--color-text-muted);
   margin-top: 3rem;
 }
 
 .error-msg {
   text-align: center;
-  color: #888;
+  color: var(--color-text-muted);
   margin-top: 3rem;
 
   p {

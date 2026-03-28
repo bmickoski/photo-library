@@ -1,7 +1,7 @@
 .empty-state {
   text-align: center;
   margin-top: 4rem;
-  color: #666;
+  color: var(--color-text-muted);
 
   a {
     color: var(--mat-sys-primary);

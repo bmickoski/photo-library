@@ -9,7 +9,7 @@
   cursor: pointer;
   overflow: hidden;
   border-radius: 6px;
-  background: #e0e0e0;
+  background: var(--color-surface);
   aspect-ratio: 2 / 3;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
@@ -57,7 +57,7 @@
   position: absolute;
   top: 6px;
   right: 8px;
-  color: #e53935;
+  color: var(--color-favorite);
   font-size: 1.2rem;
   width: 1.2rem;
   height: 1.2rem;
