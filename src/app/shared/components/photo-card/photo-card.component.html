@@ -1,5 +1,5 @@
 <button type="button" class="card" (click)="cardClicked.emit(photo())" [class.is-favorite]="isFavorite()">
-  <img [src]="photo().url" [alt]="'Photo by ' + photo().author" loading="lazy" />
+  <img [src]="photo().url" [alt]="'Photo by ' + photo().author" width="200" height="300" loading="lazy" />
   @if (isFavorite()) {
     <mat-icon class="favorite-badge" aria-label="In favorites">favorite</mat-icon>
   }

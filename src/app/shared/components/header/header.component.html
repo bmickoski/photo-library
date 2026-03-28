@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
   <span class="logo">Photo Library</span>
   <nav>
-    <a mat-button routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{ exact: true }">
+    <a mat-button routerLink="/" [class.nav-active]="isPhotosActive()">
       Photos
     </a>
     @let count = favStore.count();
@@ -9,7 +9,6 @@
       mat-button
       routerLink="/favorites"
       routerLinkActive="nav-active"
-      [routerLinkActiveOptions]="{ exact: true }"
       [matBadge]="count"
       [matBadgeHidden]="count === 0"
       matBadgeColor="warn"

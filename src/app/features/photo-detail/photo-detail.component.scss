@@ -8,11 +8,27 @@
   overflow: hidden;
 }
 
+.photo-preview {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(24px);
+  transform: scale(1.06); // hide blur edges
+}
+
 .full-photo {
+  position: relative; // sits above .photo-preview
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &.ready {
+    opacity: 1;
+  }
 }
 
 .top-bar {
@@ -47,6 +63,13 @@
   color: #ddd;
   margin: 0;
   font-size: 0.9rem;
+}
+
+.image-load-error {
+  position: relative;
+  color: #ccc;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 .not-found {

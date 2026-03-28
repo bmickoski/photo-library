@@ -55,6 +55,10 @@ export class PhotosComponent implements OnInit {
   }
 
   addToFavorites(photo: Photo): void {
+    if (this.favStore.isFavorite(photo.id)) {
+      this.#snackBar.open('Already in favorites', undefined, { duration: 2000 });
+      return;
+    }
     this.favStore.add(photo);
     this.#snackBar.open('Added to favorites', undefined, { duration: 2000 });
   }

@@ -6,7 +6,7 @@ import { FavoritesComponent } from './favorites.component';
 import { FavoritesStore } from '../../store/favorites.store';
 import { Photo } from '../../core/models/photo.model';
 
-const PHOTO: Photo = { id: '5', url: 'https://picsum.photos/id/5/200/300', width: 200, height: 300, author: 'B' };
+const PHOTO: Photo = { id: '5', url: 'https://picsum.photos/id/5/200/300', fullUrl: 'https://picsum.photos/id/5/1920/1280', width: 200, height: 300, author: 'B' };
 
 function makeFavStore(photos: Photo[] = []) {
   return {

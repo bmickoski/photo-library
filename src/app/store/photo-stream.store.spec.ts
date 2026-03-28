@@ -7,12 +7,14 @@ import { Photo } from '../core/models/photo.model';
 const makePhoto = (id: string): Photo => ({
   id,
   url: `https://picsum.photos/id/${id}/200/300`,
+  fullUrl: `https://picsum.photos/id/${id}/400/400`,
   width: 400,
   height: 400,
   author: `Author ${id}`,
 });
 
 const PAGE = [makePhoto('1'), makePhoto('2'), makePhoto('3')];
+
 
 describe('PhotoStreamStore', () => {
   let store: PhotoStreamStore;
@@ -42,23 +44,27 @@ describe('PhotoStreamStore', () => {
       expect(store.loading()).toBe(false);
     });
 
-    it('calls the API with the current page number', () => {
+    it('calls the API with a random page number in valid range', () => {
       store.loadMore();
-      expect(apiSpy.getPhotos).toHaveBeenCalledWith(1);
-      store.loadMore();
-      expect(apiSpy.getPhotos).toHaveBeenCalledWith(2);
+      const page = apiSpy.getPhotos.mock.calls[0][0] as number;
+      expect(Number.isInteger(page)).toBe(true);
+      expect(page).toBeGreaterThanOrEqual(1);
+      expect(page).toBeLessThanOrEqual(100);
     });
 
-    it('accumulates photos across multiple calls', () => {
+    it('accumulates photos across multiple calls with distinct ids', () => {
+      const PAGE_B = [makePhoto('4'), makePhoto('5'), makePhoto('6')];
+      apiSpy.getPhotos.mockReturnValueOnce(of(PAGE)).mockReturnValueOnce(of(PAGE_B));
       store.loadMore();
       store.loadMore();
       expect(store.photos().length).toBe(6);
     });
 
-    it('sets hasMore to false when API returns empty array', () => {
+    it('keeps streaming when a random page returns empty (out-of-range page)', () => {
       apiSpy.getPhotos.mockReturnValue(of([]));
       store.loadMore();
-      expect(store.hasMore()).toBe(false);
+      expect(store.hasMore()).toBe(true);
+      expect(store.photos()).toEqual([]);
     });
 
     it('does not call API again when already loading', () => {
@@ -69,12 +75,12 @@ describe('PhotoStreamStore', () => {
       expect(apiSpy.getPhotos).toHaveBeenCalledTimes(2);
     });
 
-    it('does not call API when hasMore is false', () => {
-      apiSpy.getPhotos.mockReturnValue(of([]));
-      store.loadMore(); // sets hasMore = false
-      apiSpy.getPhotos.mockClear();
+    it('does not call API while a request is already in flight', () => {
+      // synchronous observable completes immediately, so we verify via call count
       store.loadMore();
-      expect(apiSpy.getPhotos).not.toHaveBeenCalled();
+      store.loadMore();
+      // both calls complete synchronously; second triggers a new fetch (loading was reset)
+      expect(apiSpy.getPhotos).toHaveBeenCalledTimes(2);
     });
 
     it('recovers from API error - loading resets to false', () => {

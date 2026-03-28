@@ -37,9 +37,16 @@ export class PhotoApiService {
   }
 
   mapToPhoto(item: PicsumPhoto): Photo {
+    // cap at 1920px on the longest side so the detail view doesn't download a 50 MB original
+    const MAX = 1920;
+    const scale = Math.min(1, MAX / Math.max(item.width, item.height));
+    const fw = Math.round(item.width * scale);
+    const fh = Math.round(item.height * scale);
+
     return {
       id: item.id,
       url: `${BASE_URL}/id/${item.id}/200/300`,
+      fullUrl: `${BASE_URL}/id/${item.id}/${fw}/${fh}`,
       width: item.width,
       height: item.height,
       author: item.author,

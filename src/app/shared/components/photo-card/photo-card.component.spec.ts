@@ -7,6 +7,7 @@ import { Photo } from '../../../core/models/photo.model';
 const PHOTO: Photo = {
   id: '42',
   url: 'https://picsum.photos/id/42/200/300',
+  fullUrl: 'https://picsum.photos/id/42/1920/1280',
   width: 200,
   height: 300,
   author: 'Test Author',
