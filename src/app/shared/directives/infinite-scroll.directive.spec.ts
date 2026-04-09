@@ -46,6 +46,8 @@ describe('InfiniteScrollDirective', () => {
   function setup() {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
+    // Advance past the initial callback that sets #ready, prevents nav-trigger false fires.
+    capturedCallback!([{ isIntersecting: false } as IntersectionObserverEntry]);
     return {
       fixture,
       host: fixture.componentInstance,

@@ -7,7 +7,7 @@ import { FavoritesStore } from '../../store/favorites.store';
 import { Photo } from '../../core/models/photo.model';
 import { signal } from '@angular/core';
 
-const PHOTO: Photo = { id: '1', url: 'https://picsum.photos/id/1/200/300', fullUrl: 'https://picsum.photos/id/1/1920/1280', width: 200, height: 300, author: 'A' };
+const PHOTO: Photo = { id: '1', url: 'https://picsum.photos/id/1/200/300', fullUrl: 'https://picsum.photos/id/1/1920/1280', author: 'A' };
 
 // IntersectionObserver is not available in jsdom
 class MockIntersectionObserver {

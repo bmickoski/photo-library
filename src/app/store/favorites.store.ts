@@ -14,6 +14,8 @@ export class FavoritesStore {
   readonly ids = computed(() => new Set(this.#favorites().map((p) => p.id)));
 
   constructor() {
+    // Photo contains fullUrl (computed from original dimensions) - storing the full
+    // object is intentional so the detail view can skip the API call for cached favorites.
     effect(() => {
       this.#storage.set(STORAGE_KEY, this.#favorites());
     });
@@ -32,6 +34,4 @@ export class FavoritesStore {
   remove(id: string): void {
     this.#favorites.update((list) => list.filter((p) => p.id !== id));
   }
-
-
 }

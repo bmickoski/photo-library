@@ -26,17 +26,17 @@ export class PhotoApiService {
       })
       .pipe(
         delay(Math.random() * 100 + 200),
-        map((items) => items.map(this.mapToPhoto)),
+        map((items) => items.map((item) => this.#mapToPhoto(item))),
       );
   }
 
   getPhotoById(id: string): Observable<Photo> {
     return this.#http
       .get<PicsumPhoto>(`${BASE_URL}/id/${id}/info`)
-      .pipe(delay(Math.random() * 100 + 200), map(this.mapToPhoto));
+      .pipe(delay(Math.random() * 100 + 200), map((item) => this.#mapToPhoto(item)));
   }
 
-  mapToPhoto(item: PicsumPhoto): Photo {
+  #mapToPhoto(item: PicsumPhoto): Photo {
     // cap at 1920px on the longest side so the detail view doesn't download a 50 MB original
     const MAX = 1920;
     const scale = Math.min(1, MAX / Math.max(item.width, item.height));
@@ -47,8 +47,6 @@ export class PhotoApiService {
       id: item.id,
       url: `${BASE_URL}/id/${item.id}/200/300`,
       fullUrl: `${BASE_URL}/id/${item.id}/${fw}/${fh}`,
-      width: item.width,
-      height: item.height,
       author: item.author,
     };
   }

@@ -6,9 +6,7 @@ import { Photo } from '../core/models/photo.model';
 const makePhoto = (id: string): Photo => ({
   id,
   url: `https://picsum.photos/id/${id}/200/300`,
-  fullUrl: `https://picsum.photos/id/${id}/400/400`,
-  width: 400,
-  height: 400,
+  fullUrl: `https://picsum.photos/id/${id}/1920/1280`,
   author: `Author ${id}`,
 });
 

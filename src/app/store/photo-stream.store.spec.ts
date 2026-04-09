@@ -7,20 +7,19 @@ import { Photo } from '../core/models/photo.model';
 const makePhoto = (id: string): Photo => ({
   id,
   url: `https://picsum.photos/id/${id}/200/300`,
-  fullUrl: `https://picsum.photos/id/${id}/400/400`,
-  width: 400,
-  height: 400,
+  fullUrl: `https://picsum.photos/id/${id}/1920/1280`,
   author: `Author ${id}`,
 });
 
 const PAGE = [makePhoto('1'), makePhoto('2'), makePhoto('3')];
-
 
 describe('PhotoStreamStore', () => {
   let store: PhotoStreamStore;
   let apiSpy: { getPhotos: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
+    // Pin Math.random to 0 so the random start page is always 1 (0 * 80 + 1).
+    vi.spyOn(Math, 'random').mockReturnValue(0);
     apiSpy = { getPhotos: vi.fn().mockReturnValue(of(PAGE)) };
 
     TestBed.configureTestingModule({
@@ -30,6 +29,8 @@ describe('PhotoStreamStore', () => {
     store = TestBed.inject(PhotoStreamStore);
   });
 
+  afterEach(() => vi.restoreAllMocks());
+
   it('starts empty and not loading', () => {
     expect(store.photos()).toEqual([]);
     expect(store.loading()).toBe(false);
@@ -38,49 +39,37 @@ describe('PhotoStreamStore', () => {
   });
 
   describe('loadMore', () => {
-    it('appends photos and advances the page', () => {
+    it('appends photos and clears loading', () => {
       store.loadMore();
       expect(store.photos()).toEqual(PAGE);
       expect(store.loading()).toBe(false);
     });
 
-    it('calls the API with a random page number in valid range', () => {
+    it('calls the API with incrementing page numbers', () => {
       store.loadMore();
-      const page = apiSpy.getPhotos.mock.calls[0][0] as number;
-      expect(Number.isInteger(page)).toBe(true);
-      expect(page).toBeGreaterThanOrEqual(1);
-      expect(page).toBeLessThanOrEqual(100);
+      expect(apiSpy.getPhotos).toHaveBeenCalledWith(1);
+      store.loadMore();
+      expect(apiSpy.getPhotos).toHaveBeenCalledWith(2);
     });
 
-    it('accumulates photos across multiple calls with distinct ids', () => {
-      const PAGE_B = [makePhoto('4'), makePhoto('5'), makePhoto('6')];
-      apiSpy.getPhotos.mockReturnValueOnce(of(PAGE)).mockReturnValueOnce(of(PAGE_B));
+    it('accumulates photos across multiple calls', () => {
       store.loadMore();
       store.loadMore();
       expect(store.photos().length).toBe(6);
     });
 
-    it('keeps streaming when a random page returns empty (out-of-range page)', () => {
+    it('sets hasMore to false when API returns empty array', () => {
       apiSpy.getPhotos.mockReturnValue(of([]));
       store.loadMore();
-      expect(store.hasMore()).toBe(true);
-      expect(store.photos()).toEqual([]);
+      expect(store.hasMore()).toBe(false);
     });
 
-    it('does not call API again when already loading', () => {
-      // simulate in-flight request by calling loadMore with a never-resolving observable
-      apiSpy.getPhotos.mockReturnValue(of(PAGE));
+    it('does not call API when hasMore is false', () => {
+      apiSpy.getPhotos.mockReturnValue(of([]));
       store.loadMore();
-      store.loadMore(); // second call while technically already done - but page check works
-      expect(apiSpy.getPhotos).toHaveBeenCalledTimes(2);
-    });
-
-    it('does not call API while a request is already in flight', () => {
-      // synchronous observable completes immediately, so we verify via call count
+      apiSpy.getPhotos.mockClear();
       store.loadMore();
-      store.loadMore();
-      // both calls complete synchronously; second triggers a new fetch (loading was reset)
-      expect(apiSpy.getPhotos).toHaveBeenCalledTimes(2);
+      expect(apiSpy.getPhotos).not.toHaveBeenCalled();
     });
 
     it('recovers from API error - loading resets to false', () => {
@@ -107,6 +96,19 @@ describe('PhotoStreamStore', () => {
       store.loadMore();
       expect(store.isEmpty()).toBe(false);
     });
-  });
 
+    it('start page shifts with Math.random - different sessions begin at different pages', () => {
+      vi.restoreAllMocks();
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // 0.5 * 80 + 1 = 41
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [{ provide: PhotoApiService, useValue: apiSpy }],
+      });
+      const freshStore = TestBed.inject(PhotoStreamStore);
+
+      freshStore.loadMore();
+      expect(apiSpy.getPhotos).toHaveBeenCalledWith(41);
+    });
+  });
 });
